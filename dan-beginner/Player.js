@@ -5,30 +5,34 @@ class Player {
     this.turn = 1;
   }
 
+  // true if enemy directly ahead of warrior
   enemyAhead(warrior) {
     return !warrior.feel().isEmpty();
   }
-  captiveAhead(warrior) {
+
+  // true if captive directly ahead of warrior
+  captiveDirectlyAhead(warrior) {
     return warrior.feel().isCaptive();
   }
+
+  // true if warrior facing wall
   facingWall(warrior) {
     return warrior.feel().isWall();
   }
 
+  isEnemyInSight(warrior) {
+    const unit = warrior.look().find(space => !space.isEmpty());
+    return unit && unit.isEnemy();
+  }
+
   playTurn(warrior) {
-    if (this.facingWall(warrior)) {
-      warrior.pivot();
-    } else if (this.enemyAhead(warrior) && warrior.health() > 8) {
-      warrior.attack();
-    } else if (this.enemyAhead(warrior) && warrior.health() <=8) {
-      this.health = warrior.health();
-      warrior.walk('backward');
-    } else if (this.health < 20) {
-      warrior.rest();
-      this.health += 2;
+    if (this.captiveDirectlyAhead(warrior)) {
+      warrior.rescue();
+    } else if (this.isEnemyInSight(warrior)) {
+      warrior.shoot();
     } else {
       warrior.walk();
     }
-    this.turn += 1;
+  this.turn += 1;
   }
 }
