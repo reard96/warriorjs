@@ -1,4 +1,5 @@
 /* eslint-disable */
+// this is a sub-optimal solution, but it works //
 class Player {
   constructor() {
     this.health = 20;
@@ -26,7 +27,9 @@ class Player {
   }
 
   playTurn(warrior) {
-    if (this.captiveDirectlyAhead(warrior)) {
+    if (this.turn === 1) {
+      warrior.pivot();
+    } else if (this.captiveDirectlyAhead(warrior)) {
       warrior.rescue();
     } else if (this.isEnemyInSight(warrior)) {
       warrior.shoot();
